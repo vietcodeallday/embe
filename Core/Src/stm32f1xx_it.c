@@ -187,8 +187,6 @@ void SysTick_Handler(void)
   /* USER CODE END SysTick_IRQn 0 */
 
   /* USER CODE BEGIN SysTick_IRQn 1 */
-	sysTickCounter++;
-	UARTprintf("hehe %d \n",sysTickCounter);
   /* USER CODE END SysTick_IRQn 1 */
 }
 
@@ -305,23 +303,20 @@ void EXTI15_10_IRQHandler(void)
   /* USER CODE BEGIN EXTI15_10_IRQn 0 */
 	if(xSemaphoreTakeFromISR(mutex_isr, NULL) == pdTRUE) {
 	/* USER CODE BEGIN EXTI15_10_IRQn 0 */
-
-
-		button_event_t button_event = {1, START, 0};
-		BaseType_t	xHigherPriorityTaskWoken = pdFALSE;
-		xQueueSendFromISR(button_event_queue,&button_event, &xHigherPriorityTaskWoken);
+		uint32_t timestamp=0;
 
 		debouncing=0;
 		/* USER CODE END EXTI15_10_IRQn 0 */
 		while (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_12) != RESET)
 		{
+			timestamp++;
 			if (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_12)) {
 				debouncing++;
 				if(LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_12)&&debouncing>=1000){
 					LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_12);
 					xSemaphoreGiveFromISR(mutex_isr, NULL);
-
-					button_event_t button_event = {1, END, 0};
+					timestamp=timestamp/(TICK_FREQUENCY_HZ * 60);
+					button_event_t button_event = {1, END, timestamp};
 					BaseType_t	xHigherPriorityTaskWoken = pdFALSE;
 					xQueueSendFromISR(button_event_queue,&button_event, &xHigherPriorityTaskWoken);
 				}
