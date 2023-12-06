@@ -50,6 +50,7 @@ extern "C" {
 #include "queue.h"
 #include "uartstdio.h"
 #include "semphr.h"
+extern volatile uint32_t timeCounter;
 extern volatile uint32_t sysTickCounter;
 extern volatile uint32_t debouncing ;
 

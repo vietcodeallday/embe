@@ -141,12 +141,12 @@ int main(void)
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  UARTStdioConfig(USART2,true);
-  button_event_queue =  xQueueCreate(5, sizeof(button_event_t));
+  UARTStdioConfig(USART3,true);
+  button_event_queue =  xQueueCreate(10, sizeof(button_event_t));
   mutex_isr = xSemaphoreCreateMutex();
 
   xTaskCreate(LED_Task, "LED_Task",configMINIMAL_STACK_SIZE, NULL, 1, &status_task_Handle);
-  xTaskCreate(UART_Task, "UART_Task",configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+  xTaskCreate(UART_Task, "UART_Task",configMINIMAL_STACK_SIZE, NULL, 2, &status_task_Handle);
 
   /* USER CODE END 2 */
 
@@ -352,9 +352,9 @@ static void MX_GPIO_Init(void)
   /* EXTI interrupt init*/
   NVIC_SetPriority(EXTI4_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),5, 0));
   NVIC_EnableIRQ(EXTI4_IRQn);
-  NVIC_SetPriority(EXTI9_5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),4, 0));
+  NVIC_SetPriority(EXTI9_5_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),5, 0));
   NVIC_EnableIRQ(EXTI9_5_IRQn);
-  NVIC_SetPriority(EXTI15_10_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 0));
+  NVIC_SetPriority(EXTI15_10_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),5, 0));
   NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
@@ -407,10 +407,11 @@ static void LED_Task(void *pvParameters){
 }
 static void UART_Task(void *pvParameters){
 	while(1){
-		button_event_t button_event = {3, PRESSED};
+		button_event_t button_event = {4, PRESSED};
+		const char * button_event_name[] = {"PRESSED","RELEASED"};
 		xQueueReceive(button_event_queue, &button_event, portMAX_DELAY);
-		UARTprintf("button %d %s ",button_event.button_num, button_event.status);
-		vTaskDelay(100);
+		UARTprintf("button %d %s ",button_event.button_num, button_event_name[button_event.status]);
+		vTaskDelay(50);
 	}
 
 }

@@ -205,38 +205,41 @@ void EXTI4_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI4_IRQn 0 */
 	if(xSemaphoreTakeFromISR(mutex_isr, NULL) == pdTRUE) {
-		debouncing=0;
-		button_event_t button_event = {1, PRESSED};
-		BaseType_t	xHigherPriorityTaskWoken = pdFALSE;
-		/* USER CODE END EXTI4_IRQn 0 */
-
-		while (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_4) != RESET)
-		{
+			debouncing=0;
+			button_event_t button_event = {1, PRESSED};
+			BaseType_t	xHigherPriorityTaskWoken = pdFALSE;
 			xQueueSendFromISR(button_event_queue,&xHigherPriorityTaskWoken, &xHigherPriorityTaskWoken);
 			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-			sysTickCounter++;
-			if (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_4)) {
-				debouncing++;
-				if(LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_4)&&debouncing>=1000){
-					LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_4);
-					xSemaphoreGiveFromISR(mutex_isr, NULL);
+			/* USER CODE END EXTI4_IRQn 0 */
+
+			while (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_4) != RESET)
+			{
+				sysTickCounter++;
+				if (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_4)) {
+					debouncing++;
+					if(LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_4)&&debouncing>=1000){
+						LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_4);
+						xSemaphoreGiveFromISR(mutex_isr, NULL);
+					}
+				}else debouncing=0;
+				/* USER CODE BEGIN LL_EXTI_LINE_4 */
+				if (sysTickCounter/2500 > 0){
+					LL_GPIO_TogglePin(GPIOA, LL_GPIO_PIN_1 | LL_GPIO_PIN_4);
+					sysTickCounter=0;
 				}
-			}else debouncing=0;
-			/* USER CODE BEGIN LL_EXTI_LINE_4 */
-			if (sysTickCounter/2500 > 0){
-				LL_GPIO_TogglePin(GPIOA, LL_GPIO_PIN_1 | LL_GPIO_PIN_4);
-				sysTickCounter=0;
+				LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_0 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_5);
+				hienthi(88,88);
+				time=0;
+
 			}
-			LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_0 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_5);
-			hienthi(88,88);
-			time=0;
 
+			/* USER CODE BEGIN EXTI4_IRQn 1 */
+
+			/* USER CODE END EXTI4_IRQn 1 */
 		}
+  /* USER CODE BEGIN EXTI4_IRQn 1 */
 
-		/* USER CODE BEGIN EXTI4_IRQn 1 */
-
-		/* USER CODE END EXTI4_IRQn 1 */
-	}
+  /* USER CODE END EXTI4_IRQn 1 */
 }
 
 /**
@@ -246,33 +249,36 @@ void EXTI9_5_IRQHandler(void)
 {
   /* USER CODE BEGIN EXTI9_5_IRQn 0 */
 	if(xSemaphoreTakeFromISR(mutex_isr, NULL) == pdTRUE) {
-		debouncing=0;
-		button_event_t button_event = {2, PRESSED};
-		BaseType_t	xHigherPriorityTaskWoken = pdFALSE;
-		/* USER CODE END EXTI9_5_IRQn 0 */
-		while (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_5) != RESET)
-		{
+			debouncing=0;
+			button_event_t button_event = {2, PRESSED};
+			BaseType_t	xHigherPriorityTaskWoken = pdFALSE;
 			xQueueSendFromISR(button_event_queue,&xHigherPriorityTaskWoken, &xHigherPriorityTaskWoken);
 			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-			if (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_5)) {
-				debouncing++;
-				if(LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_5)&&debouncing>=1000){
-					LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_5);
-					xSemaphoreGiveFromISR(mutex_isr, NULL);
-				}
-			}else debouncing=0;
-			/* USER CODE BEGIN LL_EXTI_LINE_5 */
-			LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5);
-			LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_2 | LL_GPIO_PIN_3);
-			hienthi(00,00);
-			time=43;
-		/* USER CODE END LL_EXTI_LINE_5 */
-		}
+			/* USER CODE END EXTI9_5_IRQn 0 */
+			while (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_5) != RESET)
+			{
+				if (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_5)) {
+					debouncing++;
+					if(LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_5)&&debouncing>=1000){
+						LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_5);
+						xSemaphoreGiveFromISR(mutex_isr, NULL);
+					}
+				}else debouncing=0;
+				/* USER CODE BEGIN LL_EXTI_LINE_5 */
+				LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_0 | LL_GPIO_PIN_1 | LL_GPIO_PIN_4 | LL_GPIO_PIN_5);
+				LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_2 | LL_GPIO_PIN_3);
+				hienthi(00,00);
+				time=43;
+			/* USER CODE END LL_EXTI_LINE_5 */
+			}
 
+	  /* USER CODE BEGIN EXTI9_5_IRQn 1 */
+
+	  /* USER CODE END EXTI9_5_IRQn 1 */
+		}
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */
 
   /* USER CODE END EXTI9_5_IRQn 1 */
-	}
 }
 
 /**
@@ -293,35 +299,38 @@ void USART3_IRQHandler(void)
   */
 void EXTI15_10_IRQHandler(void)
 {
+  /* USER CODE BEGIN EXTI15_10_IRQn 0 */
 	if(xSemaphoreTakeFromISR(mutex_isr, NULL) == pdTRUE) {
-	/* USER CODE BEGIN EXTI15_10_IRQn 0 */
-		debouncing=0;
-		button_event_t button_event = {3, PRESSED};
-		BaseType_t	xHigherPriorityTaskWoken = pdFALSE;
-		/* USER CODE END EXTI15_10_IRQn 0 */
-		while (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_12) != RESET)
-		{
-			xQueueSendFromISR(button_event_queue,&xHigherPriorityTaskWoken, &xHigherPriorityTaskWoken);
-			portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-			if (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_12)) {
-				debouncing++;
-				if(LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_12)&&debouncing>=1000){
-					LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_12);
-					xSemaphoreGiveFromISR(mutex_isr, NULL);
-				}
-			}else debouncing=0;
+		/* USER CODE BEGIN EXTI15_10_IRQn 0 */
+			debouncing=0;
+			button_event_t button_event = {3, PRESSED};
+			BaseType_t	xHigherPriorityTaskWoken = pdFALSE;
 
-			/* USER CODE BEGIN LL_EXTI_LINE_12 */
-			LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_0 | LL_GPIO_PIN_5);
-			LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4);
-			hienthi(00,00);
-			time=20;
-		/* USER CODE END LL_EXTI_LINE_12 */
+			/* USER CODE END EXTI15_10_IRQn 0 */
+			while (LL_EXTI_IsActiveFlag_0_31(LL_EXTI_LINE_12) != RESET)
+			{
+				if (LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_12)) {
+					debouncing++;
+					if(LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_12)&&debouncing>=1000){
+						LL_EXTI_ClearFlag_0_31(LL_EXTI_LINE_12);
+						xSemaphoreGiveFromISR(mutex_isr, NULL);
+						xQueueSendFromISR(button_event_queue,&button_event, &xHigherPriorityTaskWoken);
+					}
+				}else debouncing=0;
+
+				/* USER CODE BEGIN LL_EXTI_LINE_12 */
+				LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_0 | LL_GPIO_PIN_5);
+				LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4);
+				hienthi(00,00);
+				time=20;
+			/* USER CODE END LL_EXTI_LINE_12 */
+			}
+		/* USER CODE BEGIN EXTI15_10_IRQn 1 */
+
+	  /* USER CODE END EXTI15_10_IRQn 1 */
 		}
-	/* USER CODE BEGIN EXTI15_10_IRQn 1 */
-
+  /* USER CODE BEGIN EXTI15_10_IRQn 1 */
   /* USER CODE END EXTI15_10_IRQn 1 */
-	}
 }
 
 /* USER CODE BEGIN 1 */
