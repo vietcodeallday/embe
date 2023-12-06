@@ -50,7 +50,6 @@ extern "C" {
 #include "queue.h"
 #include "uartstdio.h"
 #include "semphr.h"
-extern volatile uint32_t timeCounter;
 extern volatile uint32_t sysTickCounter;
 extern volatile uint32_t debouncing ;
 
@@ -66,6 +65,7 @@ typedef struct  _button_event_t
 		{
 			unsigned char	button_num;
 			unsigned char	status;
+			unsigned char	time;
 		}button_event_t;
 
 extern		xQueueHandle	button_event_queue;
@@ -74,8 +74,9 @@ extern 		xSemaphoreHandle	mutex_isr;
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-#define	PRESSED		0
-#define	RELEASED 	1
+#define TICK_FREQUENCY_HZ 8000000
+#define	START		0
+#define	END 		1
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

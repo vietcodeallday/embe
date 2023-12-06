@@ -48,15 +48,15 @@ xSemaphoreHandle mutex_isr;
 
 
 /* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
 static void LED_Task( void *pvParameters );
 static void UART_Task( void *pvParameters );
-
+/* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
+
+
 volatile uint32_t sysTickCounter = 0;
 volatile uint32_t debouncing = 0;
 
@@ -146,7 +146,7 @@ int main(void)
   mutex_isr = xSemaphoreCreateMutex();
 
   xTaskCreate(LED_Task, "LED_Task",configMINIMAL_STACK_SIZE, NULL, 1, &status_task_Handle);
-  xTaskCreate(UART_Task, "UART_Task",configMINIMAL_STACK_SIZE, NULL, 2, &status_task_Handle);
+  xTaskCreate(UART_Task, "UART_Task",configMINIMAL_STACK_SIZE, NULL, 1, &status_task_Handle);
 
   /* USER CODE END 2 */
 
@@ -407,10 +407,11 @@ static void LED_Task(void *pvParameters){
 }
 static void UART_Task(void *pvParameters){
 	while(1){
-		button_event_t button_event = {4, PRESSED};
-		const char * button_event_name[] = {"PRESSED","RELEASED"};
+		button_event_t button_event = {4, START,0};
+		const char * button_event_name[] = {"START","END"};
+		const char * event[] = {"","Vertical priority","Night","Horizontal priority"};
 		xQueueReceive(button_event_queue, &button_event, portMAX_DELAY);
-		UARTprintf("button %d %s ",button_event.button_num, button_event_name[button_event.status]);
+		UARTprintf("Event: %s, State: %s, Time: %d \n",event[button_event.button_num], button_event_name[button_event.status], button_event.time);
 		vTaskDelay(50);
 	}
 

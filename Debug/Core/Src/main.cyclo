@@ -31,4 +31,4 @@
 ../Core/Src/main.c:260:13:MX_GPIO_Init	1
 ../Core/Src/main.c:365:13:LED_Task	14
 ../Core/Src/main.c:408:13:UART_Task	1
-../Core/Src/main.c:424:6:Error_Handler	1
+../Core/Src/main.c:425:6:Error_Handler	1

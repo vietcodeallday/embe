@@ -21,7 +21,8 @@ Core/Src/stm32f1xx_hal_msp.o: ../Core/Src/stm32f1xx_hal_msp.c \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
- ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_rcc.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_bus.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_system.h \
@@ -30,6 +31,7 @@ Core/Src/stm32f1xx_hal_msp.o: ../Core/Src/stm32f1xx_hal_msp.c \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_utils.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_pwr.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_dma.h \
+ ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usart.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_gpio.h \
  C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/FreeRTOS.h \
  C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Core/Src/FreeRTOSConfig.h \
@@ -40,7 +42,11 @@ Core/Src/stm32f1xx_hal_msp.o: ../Core/Src/stm32f1xx_hal_msp.c \
  C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/mpu_wrappers.h \
  C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/task.h \
  C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/list.h \
- C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/UARTStdio/uartstdio.h
+ C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/queue.h \
+ C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/task.h \
+ C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/UARTStdio/uartstdio.h \
+ C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/semphr.h \
+ C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/queue.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 ../Core/Inc/stm32f1xx_hal_conf.h:
@@ -64,7 +70,8 @@ Core/Src/stm32f1xx_hal_msp.o: ../Core/Src/stm32f1xx_hal_msp.c \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
-../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc.h:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rtc_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_rcc.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_bus.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_system.h:
@@ -73,6 +80,7 @@ Core/Src/stm32f1xx_hal_msp.o: ../Core/Src/stm32f1xx_hal_msp.c \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_utils.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_pwr.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_dma.h:
+../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usart.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_gpio.h:
 C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/FreeRTOS.h:
 C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Core/Src/FreeRTOSConfig.h:
@@ -83,4 +91,8 @@ C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/portab
 C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/mpu_wrappers.h:
 C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/task.h:
 C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/list.h:
+C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/queue.h:
+C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/task.h:
 C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/UARTStdio/uartstdio.h:
+C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/semphr.h:
+C:/Users/quocv/Downloads/FreeRTOS_BTL/FreeRTOS_Blinky/FreeRTOS_BTL/Source/include/queue.h:
