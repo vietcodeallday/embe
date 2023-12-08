@@ -48,29 +48,28 @@ xSemaphoreHandle mutex_isr;
 
 
 /* USER CODE END PV */
-static void LED_Task( void *pvParameters );
-static void UART_Task( void *pvParameters );
+
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
+static void LED_Task( void *pvParameters );
+static void UART_Task( void *pvParameters );
 
-
-volatile uint32_t sysTickCounter = 0;
 volatile uint32_t debouncing = 0;
+TickType_t startTime;
 
 int time;
 int t1,t2;
 extern void shiftOut(int data) {
-	for (int i = 0; i < 8; i++) {
+	for (uint8_t i = 0; i < 8; i++) {
 //		LL_GPIO_WriteOutputPort(GPIOA,GPIO_PIN_6, data << (i & 0x80));
 		if ((data << i) & 0x80) {
 		    LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_6); // Nếu bit là 1, set GPIO_PIN_6 lên mức cao
 		} else {
 		    LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_6); // Nếu bit là 0, reset GPIO_PIN_6 xuống mức thấp
 		}
-
 		LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_7); // Set pin high
 		LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_7); // Set pin low
 	}
@@ -133,7 +132,9 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  SysTick_Config(SystemCoreClock / 1000);
+//  LL_SYSTICK_EnableIT();
+//  __enable_irq();
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -295,9 +296,6 @@ static void MX_GPIO_Init(void)
   LL_GPIO_AF_SetEXTISource(LL_GPIO_AF_EXTI_PORTB, LL_GPIO_AF_EXTI_LINE5);
 
   /**/
-  LL_GPIO_AF_SetEXTISource(LL_GPIO_AF_EXTI_PORTB, LL_GPIO_AF_EXTI_LINE8);
-
-  /**/
   EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_12;
   EXTI_InitStruct.LineCommand = ENABLE;
   EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
@@ -319,13 +317,6 @@ static void MX_GPIO_Init(void)
   LL_EXTI_Init(&EXTI_InitStruct);
 
   /**/
-  EXTI_InitStruct.Line_0_31 = LL_EXTI_LINE_8;
-  EXTI_InitStruct.LineCommand = ENABLE;
-  EXTI_InitStruct.Mode = LL_EXTI_MODE_IT;
-  EXTI_InitStruct.Trigger = LL_EXTI_TRIGGER_FALLING;
-  LL_EXTI_Init(&EXTI_InitStruct);
-
-  /**/
   LL_GPIO_SetPinPull(GPIOB, LL_GPIO_PIN_12, LL_GPIO_PULL_UP);
 
   /**/
@@ -335,9 +326,6 @@ static void MX_GPIO_Init(void)
   LL_GPIO_SetPinPull(GPIOB, LL_GPIO_PIN_5, LL_GPIO_PULL_UP);
 
   /**/
-  LL_GPIO_SetPinPull(GPIOB, LL_GPIO_PIN_8, LL_GPIO_PULL_UP);
-
-  /**/
   LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_12, LL_GPIO_MODE_INPUT);
 
   /**/
@@ -345,9 +333,6 @@ static void MX_GPIO_Init(void)
 
   /**/
   LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_5, LL_GPIO_MODE_INPUT);
-
-  /**/
-  LL_GPIO_SetPinMode(GPIOB, LL_GPIO_PIN_8, LL_GPIO_MODE_INPUT);
 
   /* EXTI interrupt init*/
   NVIC_SetPriority(EXTI4_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),5, 0));
@@ -364,6 +349,10 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 static void LED_Task(void *pvParameters){
 	while(1){
+		startTime = xTaskGetTickCount();
+		button_event_t button_event = {0, START,startTime};
+		xQueueSend(button_event_queue,&button_event, portMAX_DELAY);
+
 		if( time>=0 && time<20 ){
 			LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_0 | LL_GPIO_PIN_5);
 			LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_1 | LL_GPIO_PIN_2 | LL_GPIO_PIN_3 | LL_GPIO_PIN_4);
@@ -407,11 +396,12 @@ static void LED_Task(void *pvParameters){
 }
 static void UART_Task(void *pvParameters){
 	while(1){
-		button_event_t button_event = {4, START,0};
+		button_event_t button_event = {4, START};
 		const char * button_event_name[] = {"START","END"};
-		const char * event[] = {"","Vertical priority","Night","Horizontal priority"};
+		const char * event[] = {"NORMAL","Vertical priority","Night","Horizontal priority"};
 		xQueueReceive(button_event_queue, &button_event, portMAX_DELAY);
-		UARTprintf("Event: %s, State: %s, Time: %d \n",event[button_event.button_num], button_event_name[button_event.status], button_event.time);
+		UARTprintf("Event: %s, State: %s, At: %u ticks \n",event[button_event.button_num], button_event_name[button_event.status], button_event.time);
+
 		vTaskDelay(50);
 	}
 

@@ -50,8 +50,9 @@ extern "C" {
 #include "queue.h"
 #include "uartstdio.h"
 #include "semphr.h"
-extern volatile uint32_t sysTickCounter;
 extern volatile uint32_t debouncing ;
+extern TickType_t startTime;
+extern TickType_t endTime;
 
 extern int time;
 extern int t1,t2;
@@ -65,7 +66,7 @@ typedef struct  _button_event_t
 		{
 			unsigned char	button_num;
 			unsigned char	status;
-			unsigned char	time;
+			TickType_t time;
 		}button_event_t;
 
 extern		xQueueHandle	button_event_queue;
